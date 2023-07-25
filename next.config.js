@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '**/**',
+      },
+    ],
+  },
   webpack(config) {
     // SVG imports를 처리하는 기존의 규칙 불러오기
     const fileLoaderRule = config.module.rules.find((rule) =>
