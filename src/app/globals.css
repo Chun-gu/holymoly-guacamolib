@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @variants responsive {
+    /* 크롬, 사파리, 오페라 대응 */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* IE, 엣지, 파폭 대응 */
+    .hide-scrollbar {
+      -ms-overflow-style: none; /* IE, 엣지 */
+      scrollbar-width: none; /* 파폭 */
+    }
+  }
+}
