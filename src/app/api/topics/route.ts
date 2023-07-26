@@ -4,8 +4,47 @@ import { ZodError } from 'zod'
 import { authOptions } from '../auth/[...nextauth]/authOptions'
 import { prisma } from '@/lib/db'
 import { NewTopicSchema } from '@/schemas/topic'
+import { type Topic } from '@prisma/client'
 
-export async function GET() {}
+const DEFAULT_SKIP = 0
+const DEFAULT_TAKE = 5
+const SORT = { new: 'new', hot: 'hot' }
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const sort = searchParams.get('sort')
+    const skip = Number(searchParams.get('skip') || DEFAULT_SKIP)
+    const take = Number(searchParams.get('take') || DEFAULT_TAKE)
+
+    let topics: Topic[] = []
+
+    if (sort === SORT.new) {
+      topics = await prisma.topic.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take,
+      })
+    } else if (sort === SORT.hot) {
+      // TODO: sort by hotIndex
+      topics = await prisma.topic.findMany({
+        include: { author: { select: { name: true } } },
+        orderBy: { id: 'desc' },
+        skip: 0,
+        take: 5,
+      })
+    } else {
+      return NextResponse.json(
+        { error: 'Bad Request: wrong sort' },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json({ topics })
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 })
+  }
+}
 
 export async function POST(req: Request) {
   try {
