@@ -42,13 +42,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  id            String       @id @default(cuid())
+  name          String
+  email         String       @unique
   emailVerified DateTime?
-  image         String?
+  image         String
   accounts      Account[]
   sessions      Session[]
+  topics        Topic[]
+  comments      Comment[]
+  subComments   SubComment[]
 }
 
 model VerificationToken {
@@ -57,4 +60,43 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Topic {
+  id        Int       @id @default(autoincrement())
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  title     String    @db.Text
+  content   String    @db.Text
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+
+  @@index([authorId])
+}
+
+model Comment {
+  id          Int          @id @default(autoincrement())
+  author      User         @relation(fields: [authorId], references: [id])
+  authorId    String
+  topic       Topic        @relation(fields: [topicId], references: [id])
+  topicId     Int
+  content     String       @db.Text
+  subComments SubComment[]
+  createdAt   DateTime     @default(now())
+
+  @@index([authorId])
+  @@index([topicId])
+}
+
+model SubComment {
+  id        Int      @id @default(autoincrement())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId Int
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([authorId])
+  @@index([commentId])
 }
