@@ -22,6 +22,12 @@ export async function getTopics({
   return response.data.topics
 }
 
+export async function getTopic(topicId: string): Promise<Topic> {
+  const response = await client.get(`/api/topics/${topicId}`)
+
+  return response.data.topic
+}
+
 export async function createTopic(
   topic: NewTopic
 ): Promise<{ createdTopicId: string }> {
