@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 type Props = { children: React.ReactNode }
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 export default function Providers({ children }: Props) {
   return (
