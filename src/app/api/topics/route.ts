@@ -1,15 +1,15 @@
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
-import { authOptions } from '../auth/[...nextauth]/authOptions'
 import { prisma } from '@/lib/db'
 import { NewTopicSchema } from '@/schemas/topic'
 import { type Topic } from '@prisma/client'
+import { getSessionFromServer } from '../auth/getSessionFromServer'
 
 const DEFAULT_SKIP = 0
 const DEFAULT_TAKE = 5
 const SORT = { new: 'new', hot: 'hot' }
 
+// 주제 목록
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
@@ -46,9 +46,10 @@ export async function GET(req: Request) {
   }
 }
 
+// 주제 작성
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSessionFromServer()
     const authorId = session?.user.id
     if (!authorId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
