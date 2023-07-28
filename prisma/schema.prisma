@@ -77,11 +77,11 @@ model Comment {
   id              Int       @id @default(autoincrement())
   author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId        String
-  topic           Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  topicId         Int
+  topic           Topic?    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId         Int?
   content         String    @db.Text
-  parentCommentId Int?
   parentComment   Comment?  @relation("ParentChild", fields: [parentCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentCommentId Int?
   childComments   Comment[] @relation("ParentChild")
   createdAt       DateTime  @default(now())
 
