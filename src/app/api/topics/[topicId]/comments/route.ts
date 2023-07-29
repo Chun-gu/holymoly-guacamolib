@@ -6,6 +6,30 @@ import { ZodError } from 'zod'
 
 type Params = { params: { topicId: string } }
 
+const DEFAULT_SKIP = 0
+const DEFAULT_TAKE = 5
+
+// 주제의 댓글 목록
+export async function GET(req: Request, { params: { topicId } }: Params) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const skip = Number(searchParams.get('skip') || DEFAULT_SKIP)
+    const take = Number(searchParams.get('take') || DEFAULT_TAKE)
+
+    const comments = await prisma.comment.findMany({
+      include: { author: { select: { name: true } } },
+      where: { topicId: Number(topicId) },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+    })
+
+    return NextResponse.json(comments)
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 })
+  }
+}
+
 // 댓글 작성
 export async function POST(req: Request, { params: { topicId } }: Params) {
   try {
