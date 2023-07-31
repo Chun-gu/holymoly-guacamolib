@@ -20,6 +20,7 @@ export async function GET(req: Request) {
 
     if (sort === SORT.new) {
       topics = await prisma.topic.findMany({
+        where: { isDeleted: { equals: false } },
         select: {
           id: true,
           title: true,
@@ -38,6 +39,7 @@ export async function GET(req: Request) {
     } else if (sort === SORT.hot) {
       // TODO: sort by hotIndex
       topics = await prisma.topic.findMany({
+        where: { isDeleted: { equals: false } },
         select: {
           id: true,
           title: true,
