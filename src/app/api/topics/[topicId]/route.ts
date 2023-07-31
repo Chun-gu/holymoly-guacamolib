@@ -1,10 +1,9 @@
 import { prisma } from '@/lib/db'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { NextResponse } from 'next/server'
+import { NOT_FOUND_ERROR_CODE_FROM_PRISMA } from '../../constants'
 
 type Params = { params: { topicId: string } }
-
-const NOT_FOUND_ERROR_CODE_FROM_PRISMA = 'P2025'
 
 // 주제 상세 정보
 export async function GET(req: Request, { params: { topicId } }: Params) {
@@ -29,8 +28,9 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
 // 주제 삭제
 export async function DELETE(req: Request, { params: { topicId } }: Params) {
   try {
-    const deletedTopic = await prisma.topic.delete({
+    const deletedTopic = await prisma.topic.update({
       where: { id: Number(topicId) },
+      data: { isDeleted: true },
     })
 
     return NextResponse.json(

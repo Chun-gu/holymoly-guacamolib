@@ -11,8 +11,9 @@ export async function PUT(req: Request, { params: { commentId } }: Params) {}
 // 댓글 삭제
 export async function DELETE(req: Request, { params: { commentId } }: Params) {
   try {
-    const deletedComment = await prisma.comment.delete({
+    const deletedComment = await prisma.comment.update({
       where: { id: Number(commentId) },
+      data: { isDeleted: true },
     })
 
     return NextResponse.json({ deletedCommentId: deletedComment.id })
