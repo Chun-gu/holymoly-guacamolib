@@ -17,8 +17,8 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
     const take = Number(searchParams.get('take') || DEFAULT_TAKE)
 
     const comments = await prisma.comment.findMany({
+      where: { topicId: Number(topicId), isDeleted: { equals: false } },
       include: { author: { select: { name: true } } },
-      where: { topicId: Number(topicId) },
       orderBy: { createdAt: 'desc' },
       skip,
       take,
