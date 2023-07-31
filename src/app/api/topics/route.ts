@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { prisma } from '@/lib/db'
 import { NewTopicSchema } from '@/schemas/topic'
-import { type Topic } from '@prisma/client'
 import { getSessionFromServer } from '../auth/getSessionFromServer'
 
 const DEFAULT_SKIP = 0
@@ -17,10 +16,19 @@ export async function GET(req: Request) {
     const skip = Number(searchParams.get('skip') || DEFAULT_SKIP)
     const take = Number(searchParams.get('take') || DEFAULT_TAKE)
 
-    let topics: Topic[] = []
+    let topics = []
 
     if (sort === SORT.new) {
       topics = await prisma.topic.findMany({
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          createdAt: true,
+          author: { select: { id: true, name: true } },
+          options: { select: { id: true, content: true } },
+          _count: { select: { comments: true } },
+        },
         orderBy: { createdAt: 'desc' },
         skip,
         take,
@@ -28,7 +36,15 @@ export async function GET(req: Request) {
     } else if (sort === SORT.hot) {
       // TODO: sort by hotIndex
       topics = await prisma.topic.findMany({
-        include: { author: { select: { name: true } } },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          createdAt: true,
+          author: { select: { id: true, name: true } },
+          options: { select: { id: true, content: true } },
+          _count: { select: { comments: true } },
+        },
         orderBy: { id: 'desc' },
         skip: 0,
         take: 5,
@@ -39,6 +55,11 @@ export async function GET(req: Request) {
         { status: 400 }
       )
     }
+
+    topics = topics.map(({ _count, ...rest }) => ({
+      ...rest,
+      commentCount: _count.comments,
+    }))
 
     return NextResponse.json({ topics })
   } catch (error) {
@@ -56,7 +77,8 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, content } = NewTopicSchema.parse(body)
+    const { title, content, firstOption, secondOption } =
+      NewTopicSchema.parse(body)
 
     const newTopic = await prisma.topic.create({
       data: {
@@ -64,6 +86,9 @@ export async function POST(req: Request) {
         content,
         author: {
           connect: { id: authorId },
+        },
+        options: {
+          create: [{ content: firstOption }, { content: secondOption }],
         },
       },
     })
