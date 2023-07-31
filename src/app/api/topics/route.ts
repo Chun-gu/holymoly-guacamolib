@@ -29,7 +29,10 @@ export async function GET(req: Request) {
           author: { select: { id: true, name: true } },
           options: { select: { id: true, content: true } },
           _count: {
-            select: { comments: { where: { isDeleted: { equals: false } } } },
+            select: {
+              comments: { where: { isDeleted: { equals: false } } },
+              selection: true,
+            },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -47,7 +50,12 @@ export async function GET(req: Request) {
           createdAt: true,
           author: { select: { id: true, name: true } },
           options: { select: { id: true, content: true } },
-          _count: { select: { comments: true } },
+          _count: {
+            select: {
+              comments: { where: { isDeleted: { equals: false } } },
+              selection: true,
+            },
+          },
         },
         orderBy: { id: 'desc' },
         skip: 0,
@@ -63,6 +71,7 @@ export async function GET(req: Request) {
     topics = topics.map(({ _count, ...rest }) => ({
       ...rest,
       commentCount: _count.comments,
+      voteCount: _count.selection,
     }))
 
     return NextResponse.json({ topics })

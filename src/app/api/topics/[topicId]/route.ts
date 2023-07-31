@@ -8,9 +8,30 @@ type Params = { params: { topicId: string } }
 // 주제 상세 정보
 export async function GET(req: Request, { params: { topicId } }: Params) {
   try {
-    const topic = await prisma.topic.findUniqueOrThrow({
+    const foundTopic = await prisma.topic.findUniqueOrThrow({
       where: { id: Number(topicId) },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        author: { select: { id: true, name: true } },
+        options: { select: { id: true, content: true } },
+        _count: {
+          select: {
+            comments: { where: { isDeleted: { equals: false } } },
+            selection: true,
+          },
+        },
+      },
     })
+
+    const { _count, ...rest } = foundTopic
+    const topic = {
+      ...rest,
+      commentCount: _count.comments,
+      voteCount: _count.selection,
+    }
 
     return NextResponse.json(topic, { status: 200 })
   } catch (error) {
