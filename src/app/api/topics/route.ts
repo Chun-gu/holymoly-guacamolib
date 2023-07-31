@@ -27,7 +27,9 @@ export async function GET(req: Request) {
           createdAt: true,
           author: { select: { id: true, name: true } },
           options: { select: { id: true, content: true } },
-          _count: { select: { comments: true } },
+          _count: {
+            select: { comments: { where: { isDeleted: { equals: false } } } },
+          },
         },
         orderBy: { createdAt: 'desc' },
         skip,
