@@ -27,7 +27,13 @@ export async function GET(req: Request) {
           content: true,
           createdAt: true,
           author: { select: { id: true, name: true } },
-          options: { select: { id: true, content: true } },
+          options: {
+            select: {
+              id: true,
+              content: true,
+              selection: { select: { id: true } },
+            },
+          },
           selection: { select: { userId: true } },
           _count: {
             select: {
@@ -50,7 +56,13 @@ export async function GET(req: Request) {
           content: true,
           createdAt: true,
           author: { select: { id: true, name: true } },
-          options: { select: { id: true, content: true } },
+          options: {
+            select: {
+              id: true,
+              content: true,
+              selection: { select: { id: true } },
+            },
+          },
           selection: { select: { userId: true } },
           _count: {
             select: {
@@ -70,12 +82,21 @@ export async function GET(req: Request) {
       )
     }
 
-    topics = topics.map(({ _count, selection, ...rest }) => ({
-      ...rest,
-      commentCount: _count.comments,
-      voteCount: _count.selection,
-      votedUsers: selection.map(({ userId }) => userId),
-    }))
+    topics = topics.map(({ options, _count, selection, ...rest }) => {
+      const optionsWithCounts = options.map(({ id, content, selection }) => ({
+        id: id,
+        content: content,
+        count: selection.length,
+      }))
+
+      return {
+        ...rest,
+        options: optionsWithCounts,
+        commentCount: _count.comments,
+        voteCount: _count.selection,
+        votedUsers: selection.map(({ userId }) => userId),
+      }
+    })
 
     return NextResponse.json({ topics })
   } catch (error) {

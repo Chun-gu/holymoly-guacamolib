@@ -16,7 +16,13 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
         content: true,
         createdAt: true,
         author: { select: { id: true, name: true } },
-        options: { select: { id: true, content: true } },
+        options: {
+          select: {
+            id: true,
+            content: true,
+            selection: { select: { id: true } },
+          },
+        },
         selection: { select: { userId: true } },
         _count: {
           select: {
@@ -27,9 +33,16 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
       },
     })
 
+    const optionsWithCounts = foundTopic.options.map((option) => ({
+      id: option.id,
+      content: option.content,
+      count: option.selection.length,
+    }))
+
     const { _count, selection, ...rest } = foundTopic
     const topic = {
       ...rest,
+      options: optionsWithCounts,
       commentCount: _count.comments,
       voteCount: _count.selection,
       votedUsers: selection.map((userId) => userId),
