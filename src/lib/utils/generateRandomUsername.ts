@@ -1,5 +1,5 @@
-function generateRandomUsername() {
-  const prefix = 'user'
+export default function generateRandomUsername() {
+  const prefix = '논객'
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
   const randomStringLength = 8
   let suffix = ''

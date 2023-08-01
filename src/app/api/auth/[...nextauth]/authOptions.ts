@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import GoogleProvider from 'next-auth/providers/google'
 import { type AuthOptions } from 'next-auth'
+import generateRandomUsername from '@/lib/utils/generateRandomUsername'
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -14,9 +15,24 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      let isExist = true
+      while (isExist) {
+        const randomUsername = generateRandomUsername()
+        const foundUser = await prisma.user.findUnique({
+          where: { name: randomUsername },
+        })
+        if (foundUser === null) {
+          isExist = false
+          user.name = randomUsername
+          user.image = '/user-icon.svg'
+        }
+      }
+      return true
+    },
     async jwt({ token, user, account, profile }) {
       const db_user = await prisma.user.findFirst({
-        where: { email: token?.email },
+        where: { email: token?.email || undefined },
       })
 
       if (db_user) token.id = db_user.id
