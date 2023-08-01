@@ -28,6 +28,7 @@ export async function GET(req: Request) {
           createdAt: true,
           author: { select: { id: true, name: true } },
           options: { select: { id: true, content: true } },
+          selection: { select: { userId: true } },
           _count: {
             select: {
               comments: { where: { isDeleted: { equals: false } } },
@@ -50,6 +51,7 @@ export async function GET(req: Request) {
           createdAt: true,
           author: { select: { id: true, name: true } },
           options: { select: { id: true, content: true } },
+          selection: { select: { userId: true } },
           _count: {
             select: {
               comments: { where: { isDeleted: { equals: false } } },
@@ -68,10 +70,11 @@ export async function GET(req: Request) {
       )
     }
 
-    topics = topics.map(({ _count, ...rest }) => ({
+    topics = topics.map(({ _count, selection, ...rest }) => ({
       ...rest,
       commentCount: _count.comments,
       voteCount: _count.selection,
+      votedUsers: selection.map(({ userId }) => userId),
     }))
 
     return NextResponse.json({ topics })

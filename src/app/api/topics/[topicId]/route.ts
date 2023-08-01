@@ -17,6 +17,7 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
         createdAt: true,
         author: { select: { id: true, name: true } },
         options: { select: { id: true, content: true } },
+        selection: { select: { userId: true } },
         _count: {
           select: {
             comments: { where: { isDeleted: { equals: false } } },
@@ -26,11 +27,12 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
       },
     })
 
-    const { _count, ...rest } = foundTopic
+    const { _count, selection, ...rest } = foundTopic
     const topic = {
       ...rest,
       commentCount: _count.comments,
       voteCount: _count.selection,
+      votedUsers: selection.map((userId) => userId),
     }
 
     return NextResponse.json(topic, { status: 200 })
