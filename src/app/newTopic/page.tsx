@@ -16,16 +16,15 @@ export default function NewTopicPage() {
 
   const mutation = useMutation({
     mutationFn: createTopic,
-    onSuccess: () => {
-      router.replace('/')
+    onSuccess: ({ createdTopicId }) => {
+      router.replace(`/topics/${createdTopicId}`)
     },
   })
 
   const onSubmit: SubmitHandler<NewTopic> = (newTopic) => {
     try {
-      const { title, content } = NewTopicSchema.parse(newTopic)
-      console.log({ title, content })
-      mutation.mutate(newTopic)
+      const parsedNewTopic = NewTopicSchema.parse(newTopic)
+      mutation.mutate(parsedNewTopic)
     } catch (error) {
       console.log(error)
     }
@@ -35,8 +34,8 @@ export default function NewTopicPage() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <input type="text" placeholder="주제" {...register('title')} />
       <input type="text" placeholder="내용" {...register('content')} />
-      <input type="text" placeholder="선택지 1" {...register('firstOption')} />
-      <input type="text" placeholder="선택지 2" {...register('secondOption')} />
+      <input type="text" placeholder="선택지 1" {...register(`options.${0}`)} />
+      <input type="text" placeholder="선택지 2" {...register(`options.${1}`)} />
       <button>완성</button>
     </form>
   )

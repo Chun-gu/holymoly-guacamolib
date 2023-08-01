@@ -90,8 +90,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, content, firstOption, secondOption } =
-      NewTopicSchema.parse(body)
+    const { title, content, options } = NewTopicSchema.parse(body)
 
     const newTopic = await prisma.topic.create({
       data: {
@@ -101,7 +100,11 @@ export async function POST(req: Request) {
           connect: { id: authorId },
         },
         options: {
-          create: [{ content: firstOption }, { content: secondOption }],
+          create: [
+            ...options.map((option) => ({
+              content: option,
+            })),
+          ],
         },
       },
     })
