@@ -45,7 +45,7 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
       options: optionsWithCounts,
       commentCount: _count.comments,
       voteCount: _count.selection,
-      votedUsers: selection.map((userId) => userId),
+      votedUsers: selection.map(({ userId }) => userId),
     }
 
     return NextResponse.json(topic, { status: 200 })
