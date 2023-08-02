@@ -25,6 +25,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <div id='dialog-root'></div>
         </Providers>
       </body>
     </html>
