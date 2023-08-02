@@ -1,0 +1,1 @@
+export const NOT_FOUND_ERROR_CODE_FROM_PRISMA = 'P2025'
