@@ -1,5 +1,5 @@
 export default function formatDate(
-  date: Date,
+  date: string,
   format: 'relative' | 'absolute'
 ) {
   const started = new Date(date)
