@@ -3,19 +3,19 @@ import { subCommentKey } from '@/lib/subComments'
 import { Dialog } from '@/components/shared/Dialog'
 import { queryClient } from './Providers'
 import { deleteComment } from '@/lib/comments'
+import type { SubComment } from '@/lib/subComments'
 
 type Props = {
   dialog: { isOpen: boolean; open: () => void; close: () => void }
-  commentId: string
-  parentCommentId: string
+  subCommentId: SubComment['id']
+  parentCommentId: SubComment['parentCommentId']
 }
 
 export default function SubCommentDeleteDialog({
   dialog,
-  commentId,
+  subCommentId,
   parentCommentId,
 }: Props) {
-  console.log(commentId)
   const { mutate, isLoading } = useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
@@ -34,7 +34,7 @@ export default function SubCommentDeleteDialog({
           </p>
           <div>
             <Dialog.Close>취소</Dialog.Close>
-            <button onClick={() => mutate(commentId)} disabled={isLoading}>
+            <button onClick={() => mutate(subCommentId)} disabled={isLoading}>
               삭제
             </button>
           </div>
