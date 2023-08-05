@@ -38,14 +38,16 @@ export async function createComment({
 
 export async function getComments({
   topicId,
-  pageParam = 0,
+  pageParam = 1,
 }: {
   topicId: Topic['id']
   pageParam: number
 }): Promise<{ comments: Comment[]; nextPage: number | undefined }> {
   const TAKE = 10
+  const skip = (pageParam - 1) * TAKE
+
   const { data } = await client.get(
-    `/api/topics/${topicId}/comments?take=${TAKE}&page=${pageParam}`
+    `/api/topics/${topicId}/comments?skip=${skip}&take=${TAKE}`
   )
   const nextPage = data.length === TAKE ? pageParam + 1 : undefined
 
