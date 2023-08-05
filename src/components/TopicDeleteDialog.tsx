@@ -1,12 +1,12 @@
-import { useMutation } from '@tanstack/react-query'
-
-import { deleteTopic } from '@/lib/topics'
-import { Dialog } from '@/components/shared/Dialog'
 import { useRouter } from 'next/navigation'
+import { useMutation } from '@tanstack/react-query'
+import { Dialog } from '@/components/shared/Dialog'
+import { deleteTopic } from '@/lib/topics'
+import type { Topic } from '@/lib/topics'
 
 type Props = {
   dialog: { isOpen: boolean; open: () => void; close: () => void }
-  topicId: string
+  topicId: Topic['id']
 }
 
 export default function TopicDeleteDialog({ dialog, topicId }: Props) {
