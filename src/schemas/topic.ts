@@ -3,8 +3,7 @@ import { z } from 'zod'
 export const NewTopicSchema = z.object({
   title: z.string(),
   content: z.string(),
-  firstOption: z.string(),
-  secondOption: z.string(),
+  options: z.array(z.string()).length(2),
 })
 
 export type NewTopic = z.infer<typeof NewTopicSchema>
