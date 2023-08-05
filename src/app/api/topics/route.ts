@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { prisma } from '@/lib/db'
-import { NewTopicSchema } from '@/schemas/topic'
+import { NewTopicSchema } from '@/lib/topics'
 import { getSessionFromServer } from '../auth/getSessionFromServer'
 
 const DEFAULT_SKIP = 0

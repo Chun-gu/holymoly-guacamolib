@@ -1,6 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions'
 import { prisma } from '@/lib/db'
-import { NewSubCommentSchema } from '@/schemas/subComment'
+import { NewCommentSchema as NewSubCommentSchema } from '@/lib/comments'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'

@@ -1,6 +1,6 @@
 import { getSessionFromServer } from '@/app/api/auth/getSessionFromServer'
 import { prisma } from '@/lib/db'
-import { NewCommentSchema } from '@/schemas/comment'
+import { NewCommentSchema } from '@/lib/comments'
 import { NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 
