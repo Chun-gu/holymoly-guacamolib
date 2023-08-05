@@ -1,10 +1,11 @@
 import useTopicContext from '../useTopicContext'
+import { type Option } from '@/lib/topics'
 
 export default function Results() {
   const { options, voteCount } = useTopicContext()
 
-  function calculateRate(option: (typeof options)[0]) {
-    return Math.floor((option.count / voteCount || 0) * 100)
+  function calculateRate(count: Option['count']) {
+    return Math.floor((count / voteCount || 0) * 100)
   }
 
   return (
@@ -13,7 +14,7 @@ export default function Results() {
         <div key={option.id}>
           {option.content}
           <div>
-            <div>{`${calculateRate(option)}% (${option.count}표)`}</div>
+            <div>{`${calculateRate(option.count)}% (${option.count}표)`}</div>
             <div />
           </div>
         </div>

@@ -1,7 +1,8 @@
 import useTopicContext from '../useTopicContext'
+import { type Option } from '@/lib/topics'
 
 type OptionsProps = {
-  handleVote: (option: string) => void
+  handleVote: (optionId: Option['id']) => void
   isVotedTopic: boolean
 }
 

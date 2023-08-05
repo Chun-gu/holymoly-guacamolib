@@ -1,20 +1,7 @@
-import { TopicResponse } from '@/lib/topics'
 import { createContext, useContext } from 'react'
+import { type Topic } from '@/lib/topics'
 
-export const TopicContext = createContext<TopicResponse>({
-  id: '',
-  title: '',
-  content: '',
-  author: { id: '', name: '' },
-  options: [
-    { id: '', content: '', count: 0 },
-    { id: '', content: '', count: 0 },
-  ],
-  voteCount: 0,
-  commentCount: 0,
-  createdAt: '',
-  votedUsers: [''],
-})
+export const TopicContext = createContext<Topic | undefined>(undefined)
 
 export default function useTopicContext() {
   const topicContext = useContext(TopicContext)

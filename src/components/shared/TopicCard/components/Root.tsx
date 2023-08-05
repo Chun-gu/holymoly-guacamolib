@@ -1,9 +1,9 @@
-import { TopicResponse } from '@/lib/topics'
 import { TopicContext } from '../useTopicContext'
+import { type Topic } from '@/lib/topics'
 
 type RootProps = {
   children: React.ReactNode
-  topic: TopicResponse
+  topic: Topic
 }
 
 export default function Root({ children, topic }: RootProps) {
