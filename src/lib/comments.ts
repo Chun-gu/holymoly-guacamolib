@@ -4,9 +4,8 @@ import type { Topic } from './topics'
 
 export type Comment = {
   id: number
-  topicId: null
   author: { id: string; name: string }
-  parentCommentId: null
+  topicId: number
   content: string
   createdAt: string
   isDeleted: boolean

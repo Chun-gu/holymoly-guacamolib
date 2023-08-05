@@ -3,7 +3,6 @@ import type { Comment, NewComment as NewSubComment } from '@/lib/comments'
 
 export type SubComment = {
   id: number
-  topicId: null
   author: { id: string; name: string }
   parentCommentId: number
   content: string
