@@ -1,13 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
-
 import { commentKey, deleteComment } from '@/lib/comments'
 import { Dialog } from '@/components/shared/Dialog'
 import { queryClient } from './Providers'
+import { type Topic } from '@/lib/topics'
+import { type Comment } from '@/lib/comments'
 
 type Props = {
   dialog: { isOpen: boolean; open: () => void; close: () => void }
-  topicId: string
-  commentId: string
+  topicId: Topic['id']
+  commentId: Comment['id']
 }
 
 export default function CommentDeleteDialog({
