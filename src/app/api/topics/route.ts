@@ -34,7 +34,7 @@ export async function GET(req: Request) {
               selection: { select: { id: true } },
             },
           },
-          selection: { select: { userId: true } },
+          selection: { select: { userId: true, optionId: true } },
           _count: {
             select: {
               comments: { where: { isDeleted: { equals: false } } },
@@ -63,7 +63,7 @@ export async function GET(req: Request) {
               selection: { select: { id: true } },
             },
           },
-          selection: { select: { userId: true } },
+          selection: { select: { userId: true, optionId: true } },
           _count: {
             select: {
               comments: { where: { isDeleted: { equals: false } } },
@@ -94,7 +94,9 @@ export async function GET(req: Request) {
         options: optionsWithCounts,
         commentCount: _count.comments,
         voteCount: _count.selection,
-        votedUsers: selection.map(({ userId }) => userId),
+        votedUsers: selection.map(({ userId, optionId }) => ({
+          [userId]: optionId,
+        })),
       }
     })
 

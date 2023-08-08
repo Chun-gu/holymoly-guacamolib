@@ -23,7 +23,7 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
             selection: { select: { id: true } },
           },
         },
-        selection: { select: { userId: true } },
+        selection: { select: { userId: true, optionId: true } },
         _count: {
           select: {
             comments: { where: { isDeleted: { equals: false } } },
@@ -45,7 +45,13 @@ export async function GET(req: Request, { params: { topicId } }: Params) {
       options: optionsWithCounts,
       commentCount: _count.comments,
       voteCount: _count.selection,
-      votedUsers: selection.map(({ userId }) => userId),
+      votedUsers: selection.reduce<{ [index: string]: number }>(
+        (obj, { userId, optionId }) => {
+          obj[userId] = optionId
+          return obj
+        },
+        {}
+      ),
     }
 
     return NextResponse.json(topic, { status: 200 })
