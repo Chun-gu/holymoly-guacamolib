@@ -13,7 +13,7 @@ export type Topic = {
   options: Array<Option>
   commentCount: number
   voteCount: number
-  votedUsers: Array<string>
+  votedUsers: { [key: string]: Option['id'] }
   createdAt: string
 }
 

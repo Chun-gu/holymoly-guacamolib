@@ -41,7 +41,7 @@ export default function TopicDetail({ topicId }: Props) {
   })
 
   const isMyTopic = userId === topic?.author.id
-  const isVotedTopic = (topic?.votedUsers || []).includes(userId)
+  const isVotedTopic = Object.keys(topic?.votedUsers || {}).includes(userId)
 
   if (isLoading) return <div>로딩 중..</div>
   if (isError) return <div>에러 발생</div>
