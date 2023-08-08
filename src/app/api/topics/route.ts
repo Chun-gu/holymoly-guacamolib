@@ -94,9 +94,13 @@ export async function GET(req: Request) {
         options: optionsWithCounts,
         commentCount: _count.comments,
         voteCount: _count.selection,
-        votedUsers: selection.map(({ userId, optionId }) => ({
-          [userId]: optionId,
-        })),
+        votedUsers: selection.reduce<{ [index: string]: number }>(
+          (obj, { userId, optionId }) => {
+            obj[userId] = optionId
+            return obj
+          },
+          {}
+        ),
       }
     })
 
