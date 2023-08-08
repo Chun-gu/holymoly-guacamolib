@@ -39,7 +39,6 @@ export const topicKeys = {
   list: (filters: string) => [...topicKeys.lists(), { filters }] as const,
   details: () => [...topicKeys.all, 'detail'] as const,
 }
-
 export async function getTopics({
   sort,
   skip = 0,
@@ -53,7 +52,26 @@ export async function getTopics({
     `/api/topics?sort=${sort}&skip=${skip}&take=${take}`
   )
 
-  return response.data.topics
+  return response.data
+}
+
+export async function getInfiniteTopics({
+  sort,
+  pageParam = 1,
+}: {
+  sort: Sort
+  pageParam: number
+}): Promise<{ topics: Topic[]; nextPage: number | undefined }> {
+  const TAKE = 10
+  const skip = (pageParam - 1) * TAKE
+
+  const { data } = await client.get(
+    `/api/topics?sort=${sort}&skip=${skip}&take=${TAKE}`
+  )
+  console.log(data)
+  const nextPage = data.length === TAKE ? pageParam + 1 : undefined
+
+  return { topics: data, nextPage }
 }
 
 export async function getTopic(topicId: Topic['id']): Promise<Topic> {
