@@ -104,7 +104,7 @@ export async function GET(req: Request) {
       }
     })
 
-    return NextResponse.json({ topics })
+    return NextResponse.json(topics)
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 })
   }
