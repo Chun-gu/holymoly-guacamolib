@@ -1,18 +1,27 @@
 'use client'
 
-import { getTopics } from '@/lib/topics'
-import { useQuery } from '@tanstack/react-query'
+import { getInfiniteTopics, topicKeys } from '@/lib/topics'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'
 import NewTopicItem from './NewTopicItem'
 
 export default function NewTopicList() {
+  const [observingTargetRef, inView] = useInView()
+
   const {
-    data: topics,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['topics'],
-    queryFn: () => getTopics({ sort: 'new' }),
+    data: topics,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: topicKeys.new,
+    queryFn: ({ pageParam }) => getInfiniteTopics({ sort: 'new', pageParam }),
+    getNextPageParam: ({ nextPage }) => nextPage,
+    keepPreviousData: true,
   })
+
+  if (inView && hasNextPage) fetchNextPage()
 
   if (isLoading)
     return (
@@ -27,14 +36,18 @@ export default function NewTopicList() {
       </ul>
     )
 
-  return (
+  return topics.pages[0].topics.length !== 0 ? (
     <ul className="flex flex-col h-[221px] gap-[12px]">
-      {topics.length === 0 && <li>새로운 주제가 없어요.</li>}
-      {topics.map((topic) => (
-        <li key={topic.id} className=" w-full">
-          <NewTopicItem topic={topic} />
-        </li>
-      ))}
+      {topics.pages.length === 0 && <li>새로운 주제가 없어요.</li>}
+      {topics.pages.map(({ topics }) => {
+        console.log(topics)
+        return [...topics].map((topic) => (
+          <li key={topic.id} className="w-full">
+            <NewTopicItem topic={topic} />
+          </li>
+        ))
+      })}
+      <li ref={observingTargetRef} />
     </ul>
-  )
+  ) : null
 }
