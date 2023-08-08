@@ -10,9 +10,7 @@ import TopicDeleteDialog from '@/components/TopicDeleteDialog'
 import { topicKeys, getTopic, vote } from '@/lib/topics'
 import type { Topic } from '@/lib/topics'
 
-type Props = {
-  topicId: Topic['id']
-}
+type Props = { topicId: Topic['id'] }
 
 export default function TopicDetail({ topicId }: Props) {
   const { data: session } = useSession()
@@ -40,11 +38,12 @@ export default function TopicDetail({ topicId }: Props) {
     queryFn: () => getTopic(topicId),
   })
 
-  const isMyTopic = userId === topic?.author.id
-  const isVotedTopic = Object.keys(topic?.votedUsers || {}).includes(userId)
-
   if (isLoading) return <div>로딩 중..</div>
   if (isError) return <div>에러 발생</div>
+
+  const isMyTopic = userId === topic.author.id
+  const isVotedTopic = Object.keys(topic.votedUsers || {}).includes(userId)
+  const votedOption = topic.votedUsers[userId]
 
   return (
     <>
@@ -62,7 +61,7 @@ export default function TopicDetail({ topicId }: Props) {
         <TopicCard.Content />
 
         {isVotedTopic ? (
-          <TopicCard.Results />
+          <TopicCard.Results votedOption={votedOption} />
         ) : (
           <TopicCard.Options
             isVotedTopic={isVotedTopic}
