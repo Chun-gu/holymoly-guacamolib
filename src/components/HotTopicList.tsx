@@ -29,7 +29,7 @@ export default function HotTopicList() {
     )
 
   return (
-    <ul className="flex h-[221px] gap-[12px] overflow-x-scroll hide-scrollbar">
+    <ul className="flex gap-[12px] overflow-x-scroll hide-scrollbar">
       {topics.length === 0 && <li>뜨거운 주제가 없어요.</li>}
       {topics.map((topic) => (
         <li key={topic.id} className="flex justify-center items-center w-full">

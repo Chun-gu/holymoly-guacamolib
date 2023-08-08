@@ -12,7 +12,8 @@ export default function HotTopicItem({ topic }: Props) {
   const session = useSession()
   const userId = session?.data?.user.id || ''
 
-  const isVotedTopic = topic.votedUsers.includes(userId)
+  const isVotedTopic = Object.keys(topic.votedUsers).includes(userId)
+  const votedOption = topic.votedUsers[userId]
 
   const voteMutation = useMutation({
     mutationFn: vote,
@@ -26,14 +27,16 @@ export default function HotTopicItem({ topic }: Props) {
   }
 
   return (
-    <div className="flex flex-col justify-between w-[301px] h-[221px] bg-white py-[18px] px-[17px] border border-green rounded-[20px]">
+    <div className="flex flex-col justify-between w-[300px] h-[226px] bg-white py-[20px] px-[16px] border border-green rounded-[20px]">
       <TopicCard.Root topic={topic}>
-        <Link href={`/topics/${topic.id}`}>
-          <TopicCard.Title className="font-bold" />
-        </Link>
-        <TopicCard.Content />
+        <div>
+          <Link href={`/topics/${topic.id}`}>
+            <TopicCard.Title className="font-semibold text-[14px] mb-[11px]" />
+          </Link>
+          <TopicCard.Content className="text-[12px] font-semibold leading-loose mb-[19px] line-clamp-2" />
+        </div>
         {isVotedTopic ? (
-          <TopicCard.Results />
+          <TopicCard.Results votedOption={votedOption} />
         ) : (
           <TopicCard.Options
             isVotedTopic={isVotedTopic}
