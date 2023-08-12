@@ -23,7 +23,10 @@ export default function SubCommentList({ commentId }: Props) {
   return (
     <ul>
       {subComments.map((subComment) => (
-        <li key={subComment.id}>
+        <li
+          key={subComment.id}
+          className="border-b-[1px] border-grey-300 pb-[7px] mt-[7px] mb-[14px]"
+        >
           <SubCommentItem subComment={subComment} />
         </li>
       ))}

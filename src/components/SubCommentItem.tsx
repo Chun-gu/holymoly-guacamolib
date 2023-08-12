@@ -3,6 +3,7 @@
 import { useDialog } from '@/components/shared/Dialog'
 import formatDate from '@/lib/utils/formatDate'
 import IndentIcon from 'public/indent-icon.svg'
+import UserIcon from 'public/user-icon.svg'
 import SubCommentDeleteDialog from './SubCommentDeleteDialog'
 import type { SubComment } from '@/lib/subComments'
 import { useSession } from 'next-auth/react'
@@ -19,15 +20,27 @@ export default function SubCommentItem({ subComment }: Props) {
 
   return (
     <>
-      <div>
+      <div className="flex">
         <IndentIcon />
-        <span>{subComment.author.name}</span>
-        <div>
-          <span>{formatDate(subComment.createdAt, 'absolute')}</span>
-          {isMyComment && <button onClick={dialog.open}>삭제</button>}
+        <div className="flex-grow ml-2">
+          <div className="flex justify-between">
+            <div className="flex gap-1">
+              <UserIcon />
+              <span className="text-[12px] text-green">
+                {subComment.author.name}
+              </span>
+            </div>
+            <div>
+              <span className="text-[12px] text-grey-300">
+                {formatDate(subComment.createdAt, 'absolute')}
+              </span>
+              {isMyComment && <button onClick={dialog.open}>삭제</button>}
+            </div>
+          </div>
+
+          <p className="text-[10px] text-grey-800">{subComment.content}</p>
         </div>
       </div>
-      <p>{subComment.content}</p>
 
       <SubCommentDeleteDialog
         dialog={dialog}
