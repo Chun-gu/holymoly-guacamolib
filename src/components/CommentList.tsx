@@ -27,10 +27,13 @@ export default function CommentList({ topicId }: { topicId: number }) {
   if (isError) return <div>에러!</div>
 
   return comments.pages[0].comments.length !== 0 ? (
-    <ul>
+    <ul className="border border-green bg-white py-[14px] px-[11px]">
       {comments.pages.map(({ comments }) =>
         comments.map((comment) => (
-          <li key={comment.id}>
+          <li
+            key={comment.id}
+            className="border-b-[1px] border-grey-300 pb-[7px] mt-[7px] mb-[14px]"
+          >
             <Comment comment={comment} topicId={topicId} />
           </li>
         ))

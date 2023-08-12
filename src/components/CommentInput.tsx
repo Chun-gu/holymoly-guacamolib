@@ -33,7 +33,7 @@ export default function CommentInput({ topicId }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="mb-[26px]">
       <textarea
         placeholder="댓글 추가"
         maxLength={100}
@@ -44,11 +44,17 @@ export default function CommentInput({ topicId }: Props) {
             message: '최대 100자까지 입력 가능합니다.',
           },
         })}
+        className="w-full py-[7px] px-[14px] border border-green placeholder:text-green placeholder:text-[14px] resize-none mb-[10px]"
       />
-      {errors.content && <p>{errors.content.message}</p>}
+      {/* {errors.content && <p>{errors.content.message}</p>} */}
 
-      <div>
-        <button disabled={isSubmitting || !isValid}>저장하기</button>
+      <div className="flex justify-end">
+        <button
+          disabled={isSubmitting || !isValid}
+          className="py-[6px] px-[18px] bg-green rounded-full text-white text-[12px]"
+        >
+          저장하기
+        </button>
       </div>
     </form>
   )

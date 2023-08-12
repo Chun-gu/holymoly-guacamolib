@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import UserIcon from 'public/user-icon.svg'
+import CommentIcon from 'public/comment-icon.svg'
 import CommentDeleteDialog from '@/components/CommentDeleteDialog'
 import { useDialog } from '@/components/shared/Dialog'
 import formatDate from '@/lib/utils/formatDate'
@@ -29,23 +30,29 @@ export default function Comment({ comment, topicId }: Props) {
 
   return (
     <>
-      <div>
-        <div>
+      <div className="flex justify-between">
+        <div className="flex gap-1">
           <UserIcon />
-          {comment.author.name}
+          <span className="text-[12px] text-green">{comment.author.name}</span>
         </div>
         <div>
-          <span>{formatDate(comment.createdAt, 'absolute')}</span>
+          <span className="text-[12px] text-grey-300">
+            {formatDate(comment.createdAt, 'absolute')}
+          </span>
           {isMyComment && <button onClick={dialog.open}>삭제</button>}
-          <button onClick={toggleSubComment}>
-            {isSubCommentOpen ? '"대댓글 닫기"' : '"대댓글 열기"'}
-          </button>
         </div>
       </div>
-      <p>{comment.content}</p>
+
+      <p className="text-[10px] text-grey-800">{comment.content}</p>
+
+      <div className="flex justify-end">
+        <button onClick={toggleSubComment} className="justify-end">
+          <CommentIcon />
+        </button>
+      </div>
 
       {isSubCommentOpen && (
-        <section>
+        <section className="my-[6px]">
           <SubCommentInput commentId={comment.id} />
           <SubCommentList commentId={comment.id} />
         </section>
