@@ -47,28 +47,30 @@ export default function TopicDetail({ topicId }: Props) {
 
   return (
     <>
-      <TopicCard.Root topic={topic}>
-        <TopicCard.Title />
-        <div>
-          <TopicCard.CreatedAt />
-          <div>
-            {isMyTopic && <button onClick={dialog.open}>삭제</button>}
-            <button>
-              <ShareIcon />
-            </button>
+      <div className="py-[14px] px-[20px] bg-white border-[1px] border-green rounded-[20px]">
+        <TopicCard.Root topic={topic}>
+          <TopicCard.Title className="text-[18px] font-semibold" />
+          <div className="flex justify-between mb-[14px]">
+            <TopicCard.CreatedAt className="text-[13px] text-grey-700" />
+            <div>
+              {isMyTopic && <button onClick={dialog.open}>삭제</button>}
+              <button>
+                <ShareIcon />
+              </button>
+            </div>
           </div>
-        </div>
-        <TopicCard.Content />
+          <TopicCard.Content className="text-[12px] text-grey-800 leading-loose mb-[28px]" />
 
-        {isVotedTopic ? (
-          <TopicCard.Results votedOption={votedOption} />
-        ) : (
-          <TopicCard.Options
-            isVotedTopic={isVotedTopic}
-            handleVote={handleVote}
-          />
-        )}
-      </TopicCard.Root>
+          {isVotedTopic ? (
+            <TopicCard.Results votedOption={votedOption} />
+          ) : (
+            <TopicCard.Options
+              isVotedTopic={isVotedTopic}
+              handleVote={handleVote}
+            />
+          )}
+        </TopicCard.Root>
+      </div>
 
       <TopicDeleteDialog dialog={dialog} topicId={topicId} />
     </>
