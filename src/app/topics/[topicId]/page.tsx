@@ -20,12 +20,14 @@ export default async function TopicDetailPage({ params: { topicId } }: Params) {
   const numericTopicId = Number(topicId)
 
   return (
-    <main>
-      <section>
+    <main className="w-[375px] min-h-[calc(100vh-52px)] p-[20px]">
+      <section className="mb-[54px]">
         <TopicDetail topicId={numericTopicId} />
       </section>
       <section>
-        <h2>댓글</h2>
+        <h2 className="text-[18px] text-grey-800 font-semibold mb-[16px]">
+          댓글
+        </h2>
         <CommentInput topicId={numericTopicId} />
         <CommentList topicId={numericTopicId} />
       </section>
